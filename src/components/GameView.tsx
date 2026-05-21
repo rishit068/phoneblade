@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { GameScene, type FrameStats } from "../game/Scene";
 import { DEFAULT_GAME_TUNING, type GameTuning } from "../game/types";
+import { SwingDetector, type FrameData } from "../swing/SwingDetector";
+import type { SwingEvent } from "../swing/types";
+import { SoundEngine } from "../game/sound";
+import { useTuning } from "../store/tuning";
 
 type Status =
   | { kind: "idle" }
@@ -8,29 +12,88 @@ type Status =
   | { kind: "ready" }
   | { kind: "error"; msg: string };
 
+const BURST_LIFE_MS = 380;
+const LIVE_TRAIL_TAIL = 14; // recent samples drawn for the in-progress swing
+
+interface Point {
+  x: number;
+  y: number;
+}
+
+interface Burst {
+  /** performance.now() when emitted */
+  at: number;
+  pathPixels: Point[];
+  intensity: number;
+}
+
 export function GameView() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const glCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const overlayRef = useRef<HTMLCanvasElement | null>(null);
   const sceneRef = useRef<GameScene | null>(null);
+  const detectorRef = useRef<SwingDetector | null>(null);
+  const soundRef = useRef<SoundEngine>(new SoundEngine());
   const rafRef = useRef<number | null>(null);
-  const statsRef = useRef<FrameStats>({ fruitCount: 0, hitboxes: [] });
+  const statsRef = useRef<FrameStats>({
+    fruitCount: 0,
+    shardCount: 0,
+    hitboxes: [],
+  });
+  const liveFrameRef = useRef<FrameData | null>(null);
+  const burstRef = useRef<Burst | null>(null);
+  const tuningRef = useRef<GameTuning>(DEFAULT_GAME_TUNING);
+  const swingTuning = useTuning();
+  const swingTuningRef = useRef(swingTuning);
+  swingTuningRef.current = swingTuning;
+  const cleanupRef = useRef<(() => void) | null>(null);
+  const lastUiUpdateRef = useRef<number>(0);
 
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const [tuning, setTuning] = useState<GameTuning>(DEFAULT_GAME_TUNING);
-  const [fruitCount, setFruitCount] = useState(0);
+  const [hud, setHud] = useState({ fruit: 0, shards: 0, sliced: 0 });
+  const slicedTotalRef = useRef(0);
 
-  // Live-push tuning to the scene.
   useEffect(() => {
+    tuningRef.current = tuning;
     sceneRef.current?.setTuning(tuning);
   }, [tuning]);
 
+  // Live-push swing thresholds into the detector.
+  useEffect(() => {
+    const d = detectorRef.current;
+    if (!d) return;
+    d.setTuning({
+      enterThreshold: swingTuning.enterThreshold,
+      exitThreshold: swingTuning.exitThreshold,
+      minDurationMs: swingTuning.minDurationMs,
+      maxDurationMs: swingTuning.maxDurationMs,
+      velocitySmoothing: swingTuning.velocitySmoothing,
+      intensityCeiling: swingTuning.intensityCeiling,
+      trackedLandmark: swingTuning.trackedLandmark,
+    });
+  }, [
+    swingTuning.enterThreshold,
+    swingTuning.exitThreshold,
+    swingTuning.minDurationMs,
+    swingTuning.maxDurationMs,
+    swingTuning.velocitySmoothing,
+    swingTuning.intensityCeiling,
+    swingTuning.trackedLandmark,
+  ]);
+
   const start = async () => {
     if (status.kind === "loading" || status.kind === "ready") return;
+    // User gesture — prime audio.
+    soundRef.current.prime();
     setStatus({ kind: "loading", msg: "Requesting camera…" });
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: "user" },
+        video: {
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+          facingMode: "user",
+        },
         audio: false,
       });
       const video = videoRef.current;
@@ -39,7 +102,19 @@ export function GameView() {
       video.srcObject = stream;
       await video.play();
 
-      const scene = new GameScene(glCanvas, tuning);
+      setStatus({ kind: "loading", msg: "Loading hand model…" });
+      const detector = new SwingDetector();
+      detector.setTuning(swingTuningRef.current);
+      await detector.init();
+      detector.attach(video);
+      detector.on("frame", (f) => {
+        liveFrameRef.current = f;
+      });
+      detector.on("swing", (ev) => onSwing(ev));
+      detector.start();
+      detectorRef.current = detector;
+
+      const scene = new GameScene(glCanvas, tuningRef.current);
       sceneRef.current = scene;
 
       const resize = () => {
@@ -63,11 +138,14 @@ export function GameView() {
         const stats = s.step(nowMs);
         statsRef.current = stats;
         s.render();
-        drawOverlay(stats);
-        // Throttle React update for the readout.
+        drawOverlay(nowMs, stats);
         if (nowMs - lastUiUpdateRef.current > 200) {
           lastUiUpdateRef.current = nowMs;
-          setFruitCount(stats.fruitCount);
+          setHud({
+            fruit: stats.fruitCount,
+            shards: stats.shardCount,
+            sliced: slicedTotalRef.current,
+          });
         }
         rafRef.current = requestAnimationFrame(loop);
       };
@@ -78,28 +156,106 @@ export function GameView() {
     }
   };
 
-  const lastUiUpdateRef = useRef<number>(0);
-  const cleanupRef = useRef<(() => void) | null>(null);
+  const onSwing = (ev: SwingEvent) => {
+    const overlay = overlayRef.current;
+    const scene = sceneRef.current;
+    if (!overlay || !scene) return;
+    const w = overlay.width / devicePixelRatio;
+    const h = overlay.height / devicePixelRatio;
+    const pathPixels: Point[] = ev.path.map((p) => ({
+      x: p.x * w,
+      y: p.y * h,
+    }));
+    burstRef.current = {
+      at: performance.now(),
+      pathPixels,
+      intensity: ev.intensity,
+    };
+    soundRef.current.playSwing(ev.intensity);
+    const hits = scene.attemptSlice(pathPixels, ev.intensity);
+    if (hits.length > 0) {
+      slicedTotalRef.current += hits.length;
+      // Slight pitch variation per hit for chord-y feel on combos.
+      hits.forEach((_, i) => soundRef.current.playSlice(1 + i * 0.07));
+    }
+  };
 
-  const drawOverlay = (stats: FrameStats) => {
+  const drawOverlay = (nowMs: number, stats: FrameStats) => {
     const canvas = overlayRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+    const dpr = devicePixelRatio;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (!tuning.showHitboxes) return;
-    ctx.lineWidth = 2 * devicePixelRatio;
-    ctx.strokeStyle = "rgba(255, 235, 120, 0.9)";
-    ctx.font = `${12 * devicePixelRatio}px ui-monospace, Menlo, monospace`;
-    ctx.fillStyle = "rgba(255, 235, 120, 0.9)";
-    for (const h of stats.hitboxes) {
-      const cx = h.box.cx * devicePixelRatio;
-      const cy = h.box.cy * devicePixelRatio;
-      const r = h.box.r * devicePixelRatio;
+
+    // 1) Live trail while a swing is in progress.
+    const frame = liveFrameRef.current;
+    if (frame && frame.state === "active" && frame.buffer.length >= 2) {
+      const tail = frame.buffer.slice(-LIVE_TRAIL_TAIL);
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.85)";
+      ctx.lineWidth = 6 * dpr;
       ctx.beginPath();
-      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      for (let i = 0; i < tail.length; i++) {
+        const x = tail[i].x * canvas.width;
+        const y = tail[i].y * canvas.height;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
       ctx.stroke();
-      ctx.fillText(`${h.kind} #${h.id}`, cx + r + 4, cy);
+      ctx.strokeStyle = "rgba(150, 220, 255, 0.45)";
+      ctx.lineWidth = 14 * dpr;
+      ctx.stroke();
+    }
+
+    // 2) Burst trail for ~380ms after a swing emits.
+    const burst = burstRef.current;
+    if (burst) {
+      const age = nowMs - burst.at;
+      if (age >= BURST_LIFE_MS) {
+        burstRef.current = null;
+      } else {
+        const t = age / BURST_LIFE_MS;
+        const fade = 1 - t;
+        const baseWidth = (10 + burst.intensity * 22) * dpr;
+        // Tapered: stroke 3 layers — wide cyan glow, mid white, thin core.
+        strokeTaperedPolyline(
+          ctx,
+          burst.pathPixels.map((p) => ({ x: p.x * dpr, y: p.y * dpr })),
+          baseWidth * 1.6,
+          `rgba(140, 220, 255, ${(0.45 * fade).toFixed(3)})`,
+        );
+        strokeTaperedPolyline(
+          ctx,
+          burst.pathPixels.map((p) => ({ x: p.x * dpr, y: p.y * dpr })),
+          baseWidth,
+          `rgba(255, 255, 255, ${(0.85 * fade).toFixed(3)})`,
+        );
+        strokeTaperedPolyline(
+          ctx,
+          burst.pathPixels.map((p) => ({ x: p.x * dpr, y: p.y * dpr })),
+          baseWidth * 0.45,
+          `rgba(255, 255, 255, ${(1.0 * fade).toFixed(3)})`,
+        );
+      }
+    }
+
+    // 3) Hitbox debug overlay.
+    if (tuningRef.current.showHitboxes) {
+      ctx.lineWidth = 2 * dpr;
+      ctx.strokeStyle = "rgba(255, 235, 120, 0.9)";
+      ctx.font = `${12 * dpr}px ui-monospace, Menlo, monospace`;
+      ctx.fillStyle = "rgba(255, 235, 120, 0.9)";
+      for (const h of stats.hitboxes) {
+        const cx = h.box.cx * dpr;
+        const cy = h.box.cy * dpr;
+        const r = h.box.r * dpr;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.fillText(`${h.kind} #${h.id}`, cx + r + 4, cy);
+      }
     }
   };
 
@@ -107,6 +263,8 @@ export function GameView() {
     return () => {
       if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
       cleanupRef.current?.();
+      detectorRef.current?.dispose();
+      detectorRef.current = null;
       sceneRef.current?.dispose();
       sceneRef.current = null;
       const v = videoRef.current;
@@ -123,11 +281,11 @@ export function GameView() {
 
       {status.kind !== "ready" && (
         <div style={styles.overlay}>
-          <h1 style={{ margin: 0, fontSize: 22 }}>PhoneBlade — Phase 2</h1>
+          <h1 style={{ margin: 0, fontSize: 22 }}>PhoneBlade — Phase 3</h1>
           <p style={{ opacity: 0.85, maxWidth: 480, textAlign: "center" }}>
-            Fruit spawning on top of the webcam. Slicing comes in Phase 3 —
-            for now the fruit just arcs through. Toggle <b>Show hitboxes</b>
-            below to verify the screen-space hit circles track correctly.
+            Swing your hand across fruit to slice it. The live trail tracks
+            your hand mid-swing; the bright burst marks the completed slash.
+            Score and lives come in Phase 4.
           </p>
           {status.kind === "loading" && <p>{status.msg}</p>}
           {status.kind === "error" && (
@@ -142,7 +300,13 @@ export function GameView() {
       )}
 
       <div style={styles.hud}>
-        <div>fruit: {fruitCount}</div>
+        <div>
+          sliced: <b>{hud.sliced}</b>
+        </div>
+        <div style={styles.dim}>
+          fruit: {hud.fruit} · shards: {hud.shards}
+        </div>
+        <hr style={styles.sep} />
         <label style={styles.row}>
           <span>spawn / sec</span>
           <input
@@ -190,9 +354,35 @@ export function GameView() {
           reroll seed
         </button>
         <div style={styles.dim}>seed: {tuning.seed.toString(16)}</div>
+        <hr style={styles.sep} />
+        <div style={styles.dim}>
+          Tune <i>swing</i> thresholds on the Debug tab — they persist here.
+        </div>
       </div>
     </div>
   );
+}
+
+function strokeTaperedPolyline(
+  ctx: CanvasRenderingContext2D,
+  pts: Point[],
+  baseWidth: number,
+  color: string,
+) {
+  if (pts.length < 2) return;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.strokeStyle = color;
+  // We stroke per-segment with a width that tapers from baseWidth (oldest)
+  // to baseWidth*1.1 (newest) — newer is slightly fatter, suggesting follow-through.
+  for (let i = 1; i < pts.length; i++) {
+    const t = i / (pts.length - 1);
+    ctx.lineWidth = baseWidth * (0.35 + 0.75 * t);
+    ctx.beginPath();
+    ctx.moveTo(pts[i - 1].x, pts[i - 1].y);
+    ctx.lineTo(pts[i].x, pts[i].y);
+    ctx.stroke();
+  }
 }
 
 const styles = {
@@ -243,7 +433,7 @@ const styles = {
     position: "absolute",
     top: 12,
     right: 12,
-    width: 240,
+    width: 260,
     padding: 12,
     background: "rgba(11,13,16,0.78)",
     borderRadius: 8,
@@ -276,6 +466,12 @@ const styles = {
     padding: "4px 8px",
     cursor: "pointer",
     fontSize: 12,
+  } as React.CSSProperties,
+  sep: {
+    border: 0,
+    borderTop: "1px solid #2c3542",
+    margin: "4px 0",
+    width: "100%",
   } as React.CSSProperties,
   dim: {
     opacity: 0.55,

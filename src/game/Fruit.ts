@@ -113,6 +113,11 @@ const BUILDERS: Record<FruitKind, () => THREE.Object3D> = {
   watermelon: buildWatermelon,
 };
 
+/** Public factory — used by Shard to spawn halves that match the original fruit. */
+export function buildFruitMesh(kind: FruitKind): THREE.Object3D {
+  return BUILDERS[kind]();
+}
+
 export class Fruit {
   readonly kind: FruitKind;
   readonly mesh: THREE.Object3D;

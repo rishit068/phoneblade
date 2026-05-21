@@ -1,14 +1,35 @@
 import * as THREE from "three";
 import { Fruit } from "./Fruit";
 import { FruitSpawner } from "./FruitSpawner";
-import { DEFAULT_GAME_TUNING, type GameTuning, type ScreenHitbox } from "./types";
+import { Shard } from "./Shard";
+import {
+  DEFAULT_GAME_TUNING,
+  type FruitKind,
+  type GameTuning,
+  type ScreenHitbox,
+} from "./types";
 
-/** Once a fruit falls below this y, it's culled. */
+/** Once a fruit (or shard) falls below this y, it's culled. */
 const DESPAWN_Y = -5;
 
 export interface FrameStats {
   fruitCount: number;
-  hitboxes: Array<{ id: number; kind: Fruit["kind"]; box: ScreenHitbox }>;
+  shardCount: number;
+  hitboxes: Array<{ id: number; kind: FruitKind; box: ScreenHitbox }>;
+}
+
+export interface SliceResult {
+  fruitId: number;
+  kind: FruitKind;
+  /** Screen pixel position of the fruit at slice time. */
+  screen: { x: number; y: number };
+  /** Pass-through of the swing event intensity (0..1). */
+  intensity: number;
+}
+
+interface PathPoint {
+  x: number;
+  y: number;
 }
 
 export class GameScene {
@@ -18,6 +39,7 @@ export class GameScene {
   private spawner: FruitSpawner;
   private tuning: GameTuning;
   private fruits = new Map<number, Fruit>();
+  private shards: Shard[] = [];
   private nextId = 1;
   private lastTickMs: number | null = null;
   private hitboxScratch = {
@@ -41,7 +63,6 @@ export class GameScene {
     this.camera.position.set(0, 0, 5);
     this.camera.lookAt(0, 0, 0);
 
-    // Lighting — needed for MeshStandardMaterial to show color.
     const ambient = new THREE.AmbientLight(0xffffff, 0.55);
     this.scene.add(ambient);
     const key = new THREE.DirectionalLight(0xffffff, 1.15);
@@ -66,7 +87,6 @@ export class GameScene {
   setTuning(partial: Partial<GameTuning>): void {
     if (partial.spawnRate !== undefined) this.spawner.setSpawnRate(partial.spawnRate);
     if (partial.seed !== undefined && partial.seed !== this.tuning.seed) {
-      // Re-seeding mid-game wipes accumulator + reroll; rarely needed in play.
       this.spawner = new FruitSpawner({
         seed: partial.seed,
         spawnRate: partial.spawnRate ?? this.tuning.spawnRate,
@@ -81,7 +101,7 @@ export class GameScene {
 
   step(nowMs: number): FrameStats {
     const last = this.lastTickMs ?? nowMs;
-    const dt = Math.min(0.05, (nowMs - last) / 1000); // clamp to 50ms to survive tab pauses
+    const dt = Math.min(0.05, (nowMs - last) / 1000);
     this.lastTickMs = nowMs;
 
     // Spawn
@@ -92,7 +112,7 @@ export class GameScene {
       this.scene.add(f.mesh);
     }
 
-    // Update + cull
+    // Update fruits + cull
     for (const [id, f] of this.fruits) {
       f.update(dt, this.tuning.gravity);
       if (f.mesh.position.y < DESPAWN_Y || Math.abs(f.mesh.position.x) > 8) {
@@ -103,7 +123,18 @@ export class GameScene {
       }
     }
 
-    // Hitboxes (used by Phase 3+ slicing; exposed now so we can debug-draw them)
+    // Update shards + cull
+    for (let i = this.shards.length - 1; i >= 0; i--) {
+      const s = this.shards[i];
+      const alive = s.update(dt, this.tuning.gravity);
+      if (!alive || s.mesh.position.y < DESPAWN_Y) {
+        this.scene.remove(s.mesh);
+        s.dispose();
+        this.shards.splice(i, 1);
+      }
+    }
+
+    // Compute hitboxes for this frame
     const w = this.renderer.domElement.clientWidth;
     const h = this.renderer.domElement.clientHeight;
     const hitboxes: FrameStats["hitboxes"] = [];
@@ -115,7 +146,80 @@ export class GameScene {
       });
     }
 
-    return { fruitCount: this.fruits.size, hitboxes };
+    return { fruitCount: this.fruits.size, shardCount: this.shards.length, hitboxes };
+  }
+
+  /**
+   * Test a slash polyline (in screen pixels) against all active fruit hitboxes.
+   * Hit fruits are removed and replaced by two split shards. Returns slice info.
+   */
+  attemptSlice(pathPixels: PathPoint[], intensity: number): SliceResult[] {
+    if (pathPixels.length < 2) return [];
+    const results: SliceResult[] = [];
+    const w = this.renderer.domElement.clientWidth;
+    const h = this.renderer.domElement.clientHeight;
+
+    // Overall slash direction in screen space.
+    const p0 = pathPixels[0];
+    const pN = pathPixels[pathPixels.length - 1];
+    const sxRaw = pN.x - p0.x;
+    const syRaw = pN.y - p0.y;
+    const mag = Math.hypot(sxRaw, syRaw) || 1;
+    const sx = sxRaw / mag;
+    const sy = syRaw / mag;
+    // World-space split axis: perpendicular to slash, screen→world Y flip.
+    const splitAxis = new THREE.Vector3(-sy, -sx, 0);
+    if (splitAxis.lengthSq() < 1e-6) splitAxis.set(1, 0, 0);
+    splitAxis.normalize();
+
+    const toRemove: number[] = [];
+    for (const [id, fruit] of this.fruits) {
+      const hb = fruit.screenHitbox(this.camera, w, h, this.hitboxScratch);
+      if (!pathHitsCircle(pathPixels, hb)) continue;
+
+      results.push({
+        fruitId: id,
+        kind: fruit.kind,
+        screen: { x: hb.cx, y: hb.cy },
+        intensity,
+      });
+
+      // Spawn 2 shards
+      for (const side of [-1, 1] as const) {
+        const baseVel = fruit.velocity.clone().multiplyScalar(0.6);
+        baseVel.addScaledVector(splitAxis, side * 2.4);
+        baseVel.y += 1.2; // pop upward
+        const angVel = new THREE.Vector3(
+          (Math.random() - 0.5) * 8,
+          (Math.random() - 0.5) * 8,
+          (Math.random() - 0.5) * 6,
+        );
+        const shard = new Shard({
+          kind: fruit.kind,
+          position: fruit.mesh.position.clone(),
+          velocity: baseVel,
+          angularVelocity: angVel,
+          radius: fruit.radius,
+          side,
+          splitAxis,
+        });
+        this.shards.push(shard);
+        this.scene.add(shard.mesh);
+      }
+
+      toRemove.push(id);
+    }
+
+    for (const id of toRemove) {
+      const f = this.fruits.get(id);
+      if (f) {
+        this.scene.remove(f.mesh);
+        f.dispose();
+        this.fruits.delete(id);
+      }
+    }
+
+    return results;
   }
 
   render(): void {
@@ -128,6 +232,38 @@ export class GameScene {
       f.dispose();
     }
     this.fruits.clear();
+    for (const s of this.shards) {
+      this.scene.remove(s.mesh);
+      s.dispose();
+    }
+    this.shards.length = 0;
     this.renderer.dispose();
   }
+}
+
+function pathHitsCircle(path: PathPoint[], hb: ScreenHitbox): boolean {
+  for (let i = 1; i < path.length; i++) {
+    if (segmentHitsCircle(path[i - 1], path[i], hb)) return true;
+  }
+  return false;
+}
+
+function segmentHitsCircle(a: PathPoint, b: PathPoint, hb: ScreenHitbox): boolean {
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  const fx = a.x - hb.cx;
+  const fy = a.y - hb.cy;
+  const A = dx * dx + dy * dy;
+  const B = 2 * (fx * dx + fy * dy);
+  const C = fx * fx + fy * fy - hb.r * hb.r;
+  if (A < 1e-6) return Math.hypot(fx, fy) <= hb.r;
+  const disc = B * B - 4 * A * C;
+  if (disc < 0) return false;
+  const sq = Math.sqrt(disc);
+  const t1 = (-B - sq) / (2 * A);
+  const t2 = (-B + sq) / (2 * A);
+  if (t1 >= 0 && t1 <= 1) return true;
+  if (t2 >= 0 && t2 <= 1) return true;
+  if (t1 < 0 && t2 > 1) return true; // segment fully inside circle
+  return false;
 }
