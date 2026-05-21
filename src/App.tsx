@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { DebugScreen } from "./components/DebugScreen";
 import { GameView } from "./components/GameView";
+import { FistDebugScreen } from "./components/FistDebugScreen";
 
-type Mode = "debug" | "play";
+type Mode = "debug" | "play" | "fist";
 
 export function App() {
   const [mode, setMode] = useState<Mode>("debug");
@@ -22,9 +23,17 @@ export function App() {
         >
           Play (fruit)
         </button>
+        <button
+          style={tab(mode === "fist")}
+          onClick={() => setMode("fist")}
+        >
+          Fist (track)
+        </button>
       </nav>
       <div style={bodyStyle}>
-        {mode === "debug" ? <DebugScreen /> : <GameView />}
+        {mode === "debug" && <DebugScreen />}
+        {mode === "play" && <GameView />}
+        {mode === "fist" && <FistDebugScreen />}
       </div>
     </div>
   );
