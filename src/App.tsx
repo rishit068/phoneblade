@@ -2,8 +2,9 @@ import { useState } from "react";
 import { DebugScreen } from "./components/DebugScreen";
 import { GameView } from "./components/GameView";
 import { FistDebugScreen } from "./components/FistDebugScreen";
+import { SwordPreviewScreen } from "./components/SwordPreviewScreen";
 
-type Mode = "debug" | "play" | "fist";
+type Mode = "debug" | "play" | "fist" | "sword";
 
 export function App() {
   const [mode, setMode] = useState<Mode>("debug");
@@ -29,11 +30,18 @@ export function App() {
         >
           Fist (track)
         </button>
+        <button
+          style={tab(mode === "sword")}
+          onClick={() => setMode("sword")}
+        >
+          Sword (preview)
+        </button>
       </nav>
       <div style={bodyStyle}>
         {mode === "debug" && <DebugScreen />}
         {mode === "play" && <GameView />}
         {mode === "fist" && <FistDebugScreen />}
+        {mode === "sword" && <SwordPreviewScreen />}
       </div>
     </div>
   );
