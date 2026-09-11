@@ -18,11 +18,7 @@ export function App() {
       <nav className="flex items-center gap-3 px-4 py-2 bg-surface-container border-b border-outline-variant text-xs z-50">
         <span className="font-bold text-primary mr-2 tracking-wider uppercase">PhoneBlade</span>
         <button
-          className={`px-3 py-1 rounded font-label-sm uppercase tracking-wider cursor-pointer ${
-            mode === "play"
-              ? "bg-primary-container text-on-primary-container font-bold shadow-sm shadow-primary-container/30"
-              : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high"
-          }`}
+          className="px-3 py-1 rounded font-label-sm uppercase tracking-wider cursor-pointer text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high"
           onClick={() => setMode("play")}
         >
           Play Arena
