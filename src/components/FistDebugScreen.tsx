@@ -41,6 +41,13 @@ export function FistDebugScreen() {
 
   const start = async () => {
     if (status.kind === "loading" || status.kind === "ready") return;
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setStatus({
+        kind: "error",
+        msg: "Camera access requires a secure context. Please open http://localhost:5173 in your browser instead of using the network IP.",
+      });
+      return;
+    }
     setStatus({ kind: "loading", msg: "Requesting camera…" });
     try {
       const stream = await navigator.mediaDevices.getUserMedia({

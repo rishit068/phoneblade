@@ -39,13 +39,13 @@ export interface SwingTuning {
 }
 
 export const DEFAULT_TUNING: SwingTuning = {
-  enterThreshold: 1.8,
-  exitThreshold: 0.7,
-  minDurationMs: 80,
-  maxDurationMs: 900,
+  enterThreshold: 0.5,
+  exitThreshold: 0.25,
+  minDurationMs: 60,
+  maxDurationMs: 1200,
   velocitySmoothing: 0.35,
-  intensityCeiling: 5.0,
-  trackedLandmark: 9,
+  intensityCeiling: 3.5,
+  trackedLandmark: 8, // Index fingertip (8) for intuitive pointing & slicing
 };
 
 export interface HandSample {

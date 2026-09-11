@@ -6,7 +6,7 @@ interface TuningState extends SwingTuning {
   reset: () => void;
 }
 
-const STORAGE_KEY = "phoneblade.tuning.v1";
+const STORAGE_KEY = "phoneblade.tuning.v2";
 
 function loadInitial(): SwingTuning {
   try {

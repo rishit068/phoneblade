@@ -153,29 +153,34 @@ export class GameScene {
    * Test a slash polyline (in screen pixels) against all active fruit hitboxes.
    * Hit fruits are removed and replaced by two split shards. Returns slice info.
    */
-  attemptSlice(pathPixels: PathPoint[], intensity: number): SliceResult[] {
-    if (pathPixels.length < 2) return [];
+  attemptSlice(pathPixels: PathPoint[], intensity: number, bladeRadius = 32): SliceResult[] {
+    if (pathPixels.length < 1) return [];
     const results: SliceResult[] = [];
     const w = this.renderer.domElement.clientWidth;
     const h = this.renderer.domElement.clientHeight;
 
     // Overall slash direction in screen space.
-    const p0 = pathPixels[0];
-    const pN = pathPixels[pathPixels.length - 1];
-    const sxRaw = pN.x - p0.x;
-    const syRaw = pN.y - p0.y;
-    const mag = Math.hypot(sxRaw, syRaw) || 1;
-    const sx = sxRaw / mag;
-    const sy = syRaw / mag;
-    // World-space split axis: perpendicular to slash, screen→world Y flip.
-    const splitAxis = new THREE.Vector3(-sy, -sx, 0);
+    let splitAxis: THREE.Vector3;
+    if (pathPixels.length >= 2) {
+      const p0 = pathPixels[0];
+      const pN = pathPixels[pathPixels.length - 1];
+      const sxRaw = pN.x - p0.x;
+      const syRaw = pN.y - p0.y;
+      const mag = Math.hypot(sxRaw, syRaw) || 1;
+      const sx = sxRaw / mag;
+      const sy = syRaw / mag;
+      // World-space split axis: perpendicular to slash, screen→world Y flip.
+      splitAxis = new THREE.Vector3(-sy, -sx, 0);
+    } else {
+      splitAxis = new THREE.Vector3(1, 0.4, 0);
+    }
     if (splitAxis.lengthSq() < 1e-6) splitAxis.set(1, 0, 0);
     splitAxis.normalize();
 
     const toRemove: number[] = [];
     for (const [id, fruit] of this.fruits) {
       const hb = fruit.screenHitbox(this.camera, w, h, this.hitboxScratch);
-      if (!pathHitsCircle(pathPixels, hb)) continue;
+      if (!pathHitsCircle(pathPixels, hb, bladeRadius)) continue;
 
       results.push({
         fruitId: id,
@@ -241,22 +246,27 @@ export class GameScene {
   }
 }
 
-function pathHitsCircle(path: PathPoint[], hb: ScreenHitbox): boolean {
+function pathHitsCircle(path: PathPoint[], hb: ScreenHitbox, bladeRadius = 32): boolean {
+  if (path.length === 1) {
+    const dist = Math.hypot(path[0].x - hb.cx, path[0].y - hb.cy);
+    return dist <= hb.r + bladeRadius;
+  }
   for (let i = 1; i < path.length; i++) {
-    if (segmentHitsCircle(path[i - 1], path[i], hb)) return true;
+    if (segmentHitsCircle(path[i - 1], path[i], hb, bladeRadius)) return true;
   }
   return false;
 }
 
-function segmentHitsCircle(a: PathPoint, b: PathPoint, hb: ScreenHitbox): boolean {
+function segmentHitsCircle(a: PathPoint, b: PathPoint, hb: ScreenHitbox, bladeRadius = 32): boolean {
   const dx = b.x - a.x;
   const dy = b.y - a.y;
   const fx = a.x - hb.cx;
   const fy = a.y - hb.cy;
   const A = dx * dx + dy * dy;
   const B = 2 * (fx * dx + fy * dy);
-  const C = fx * fx + fy * fy - hb.r * hb.r;
-  if (A < 1e-6) return Math.hypot(fx, fy) <= hb.r;
+  const effectiveR = hb.r + bladeRadius;
+  const C = fx * fx + fy * fy - effectiveR * effectiveR;
+  if (A < 1e-6) return Math.hypot(fx, fy) <= effectiveR;
   const disc = B * B - 4 * A * C;
   if (disc < 0) return false;
   const sq = Math.sqrt(disc);

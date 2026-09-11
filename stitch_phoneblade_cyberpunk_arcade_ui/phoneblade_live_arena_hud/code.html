@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary":"#dbfcff","surface-container":"#1d2025","on-secondary-fixed":"#002117","on-primary-fixed-variant":"#004f54","on-primary-fixed":"#002022","surface-container-high":"#282a30","surface-container-lowest":"#0c0e13","tertiary-container":"#ffcdd0","on-secondary":"#003829","secondary-fixed-dim":"#64dbb4","on-background":"#e2e2ea","on-error-container":"#ffdad6","surface-dim":"#111319","background":"#111319","outline":"#849495","primary-container":"#00f0ff","on-primary":"#00363a","secondary-fixed":"#82f8cf","tertiary-fixed-dim":"#ffb2b8","on-tertiary-fixed":"#40000f","on-tertiary-fixed-variant":"#91002d","secondary":"#64dbb4","on-error":"#690005","on-surface-variant":"#b9cacb","surface-tint":"#00dbe9","secondary-container":"#1ca380","on-tertiary":"#67001d","primary-fixed-dim":"#00dbe9","surface-variant":"#33353b","on-secondary-container":"#003024","on-primary-container":"#006970","outline-variant":"#3b494b","tertiary":"#fff3f3","error-container":"#93000a","inverse-on-surface":"#2e3036","inverse-surface":"#e2e2ea","primary-fixed":"#7df4ff","surface":"#111319","on-tertiary-container":"#be003d","surface-bright":"#37393f","surface-container-low":"#191c21","error":"#ffb4ab","on-secondary-fixed-variant":"#00513d","surface-container-highest":"#33353b","on-surface":"#e2e2ea","tertiary-fixed":"#ffdadb","inverse-primary":"#006970"},borderRadius:{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},spacing:{"space-md":"1rem","gutter":"1.5rem","space-xs":"0.25rem","gutter-mobile":"0.75rem","margin":"2rem","space-xl":"2.5rem","space-lg":"1.5rem","margin-mobile":"1rem","space-sm":"0.5rem"},fontFamily:{"label-lg":["JetBrains Mono"],"body-md":["JetBrains Mono"],"display-hero-mobile":["Space Grotesk"],"label-sm":["JetBrains Mono"],"headline-lg-mobile":["Space Grotesk"],"headline-lg":["Space Grotesk"],"telemetry-num":["JetBrains Mono"],"display-hero":["Space Grotesk"],"label-md":["JetBrains Mono"],"body-lg":["JetBrains Mono"],"headline-md":["Space Grotesk"],"body-sm":["JetBrains Mono"],"headline-sm":["Space Grotesk"]},fontSize:{"label-lg":["14px",{"lineHeight":"20px","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"display-hero-mobile":["40px",{"lineHeight":"48px","fontWeight":"700"}],"label-sm":["10px",{"lineHeight":"14px","fontWeight":"500"}],"headline-lg-mobile":["28px",{"lineHeight":"36px","fontWeight":"700"}],"headline-lg":["36px",{"lineHeight":"44px","fontWeight":"700"}],"telemetry-num":["48px",{"lineHeight":"52px","fontWeight":"700"}],"display-hero":["64px",{"lineHeight":"72px","fontWeight":"700"}],"label-md":["12px",{"lineHeight":"16px","fontWeight":"500"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"headline-md":["24px",{"lineHeight":"32px","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"18px","fontWeight":"400"}],"headline-sm":["20px",{"lineHeight":"28px","fontWeight":"600"}]}}}};</script></head><body class="bg-surface-container-lowest font-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container min-h-screen"><header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface-container-lowest/80 backdrop-blur-xl border-b border-primary-container/20 shadow-[0_4px_24px_rgba(0,0,0,0.6)]"><div class="h-16 w-full px-gutter flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-md"><img alt="PhoneBlade Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1WGff_k1Qz2xMaxfIYqCqzdDh5PwO2yZkIW1HJVOzBDey_I6kS5zwM8311iqUssUg6sXSdqi5bWf6pqHvGR97WOHogbFKavtjn8AtEZFsabzoR0I4nlOz5ERkIsGUZwInD5FxUXNpwL3jP01YDj59UX_EpcY_XAvJi7Kg00_5cz6HZgXyKQ0ku7kLqv2YhvTeL7e5vQMMQYtmjAKsqjUxjKQgqYpWjzLieGQsz4T8LvXPzuoHspMxlNitM"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm uppercase tracking-wider text-primary font-bold drop-shadow-[0_0_8px_rgba(0,240,255,0.4)]">PhoneBlade</span><span class="font-label-sm text-label-sm text-outline tracking-widest uppercase">Cybernetic Blade Engine</span></div><div class="hidden xl:flex items-center gap-space-sm pl-space-md ml-space-sm border-l border-outline-variant"><div class="flex items-center gap-space-xs bg-surface-container-low px-space-sm py-space-xs rounded border border-outline-variant"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span><span class="font-label-sm text-label-sm text-secondary font-bold tracking-wider">[STATUS: 60 FPS]</span></div><div class="flex items-center gap-space-xs bg-surface-container-low px-space-sm py-space-xs rounded border border-outline-variant"><span class="material-symbols-outlined text-primary text-[14px]">videocam</span><span class="font-label-sm text-label-sm text-on-surface-variant font-medium tracking-wide">CAM: LOW LATENCY TRACKING</span></div></div></div><nav class="hidden md:flex items-center gap-space-sm" data-active-classes="bg-primary-container text-on-primary-container font-bold rounded shadow-[0_0_12px_rgba(0,240,255,0.35)]"><a aria-current="page" class="px-space-md py-space-xs uppercase tracking-wider transition-all bg-primary-container text-on-primary-container font-bold rounded shadow-[0_0_12px_rgba(0,240,255,0.35)]" data-path="arena" href="#">Arena</a><a class="px-space-md py-space-xs font-label-md text-label-md uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface rounded transition-all" data-path="dojo-calibration" href="#">Dojo Calibration</a><a class="px-space-md py-space-xs font-label-md text-label-md uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface rounded transition-all" data-path="leaderboard" href="#">Leaderboard</a><a class="px-space-md py-space-xs font-label-md text-label-md uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface rounded transition-all" data-path="blade-armory" href="#">Blade Armory</a></nav><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs bg-surface-container-low p-space-xs rounded border border-outline-variant"><button aria-label="Toggle Audio" class="p-space-xs text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">volume_up</span></button><button aria-label="Toggle Fullscreen" class="p-space-xs text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">fullscreen</span></button></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-[0_0_10px_rgba(0,240,255,0.5)]"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 bg-surface-container-lowest min-h-screen flex flex-col"><div class="flex flex-col w-full relative min-h-[calc(100vh-4rem)] overflow-hidden select-none bg-surface-container-lowest">
+<!-- Interactive Slash Canvas Layer -->
+<canvas class="absolute inset-0 z-20 w-full h-full pointer-events-auto cursor-crosshair" id="bladeCanvas"></canvas>
+<!-- Live Simulated Video Tracking Feed & Ambient Cyber Background -->
+<div class="absolute inset-0 z-0 bg-surface-container-lowest overflow-hidden">
+<div class="w-full h-full bg-cover bg-center opacity-35 filter contrast-125 saturate-150 transform scale-105" data-alt="Dark dramatic first-person point of view inside a neon-lit cyberpunk arcade studio, faint moody silhouette of a player holding a luminous glowing cyber phone, bathed in volumetric cyan, deep obsidian, and electric mint rim lighting, high-tech optic tracking atmosphere" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCiylsvQagWbdyw9DaQ3H2i_NbCsR_gAKSIjZCrV5Lg2ist6N5tL1iJSuH9w6jkBg4aU-ZgPYIUYg96bjzBCPcyxD7_xrJszZFVVxn8inPw0x35MxBJKlWiJ5cB_o2GOezFeY9yo87P8_rB4DolmLeuALrsj5Xz1fPO1gjLx8Ax0kz196rsMjVOow47i6Ca-b-Smwjq8ROYJ26g5NO9zQlDHW1bjWI5yZoE-577WVuKAdQo29WLRuxd')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/60 to-surface-container-lowest/80"></div>
+<div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary-container/5 via-transparent to-surface-container-lowest/90 pointer-events-none"></div>
+<!-- Optic Scanlines Overlay -->
+<div class="absolute inset-0 opacity-10 pointer-events-none bg-[linear-gradient(rgba(0,240,255,0.06)_1px,transparent_1px)] bg-[size:100%_4px]"></div>
+</div>
+<!-- Central Kinetic Combat Visuals (Neon Fruit Slices, Slash Arc, & Arcade Float Telemetry) -->
+<div class="absolute inset-0 z-10 pointer-events-none overflow-hidden flex items-center justify-center">
+<!-- Large Razor Slash Light Arc (Dynamic Neon Blade Stroke) -->
+<svg class="absolute inset-0 w-full h-full" fill="none" preserveaspectratio="xMidYMid slice" viewbox="0 0 1920 1080">
+<defs>
+<filter height="160%" id="neonGlowCyan" width="160%" x="-30%" y="-30%">
+<fegaussianblur result="blur1" stddeviation="12"></fegaussianblur>
+<fegaussianblur result="blur2" stddeviation="4"></fegaussianblur>
+<femerge>
+<femergenode in="blur1"></femergenode>
+<femergenode in="blur2"></femergenode>
+<femergenode in="SourceGraphic"></femergenode>
+</femerge>
+</filter>
+<filter height="160%" id="neonGlowMint" width="160%" x="-30%" y="-30%">
+<fegaussianblur result="blur" stddeviation="8"></fegaussianblur>
+<femerge>
+<femergenode in="blur"></femergenode>
+<femergenode in="SourceGraphic"></femergenode>
+</femerge>
+</filter>
+<lineargradient id="bladeTrailGrad" x1="0%" x2="100%" y1="100%" y2="0%">
+<stop offset="0%" stop-color="#00f0ff" stop-opacity="0"></stop>
+<stop offset="35%" stop-color="#00f0ff" stop-opacity="0.9"></stop>
+<stop offset="70%" stop-color="#7af0c8" stop-opacity="1"></stop>
+<stop offset="100%" stop-color="#dbfcff" stop-opacity="1"></stop>
+</lineargradient>
+</defs>
+<!-- Slash Trail Main Path -->
+<path d="M 320 840 C 680 720, 1140 460, 1560 210" filter="url(#neonGlowCyan)" stroke="url(#bladeTrailGrad)" stroke-linecap="round" stroke-width="10"></path>
+<!-- Intense White Kinetic Core -->
+<path d="M 440 800 C 740 680, 1100 445, 1480 240" stroke="#dbfcff" stroke-linecap="round" stroke-width="3"></path>
+<!-- Spark & Shard Embers bursting along slice trajectory -->
+<circle cx="890" cy="580" fill="#00f0ff" filter="url(#neonGlowCyan)" r="4"></circle>
+<circle cx="940" cy="540" fill="#7af0c8" r="2.5"></circle>
+<circle cx="980" cy="510" fill="#dbfcff" filter="url(#neonGlowMint)" r="5"></circle>
+<circle cx="1030" cy="460" fill="#00f0ff" r="3"></circle>
+<circle cx="1120" cy="430" fill="#7af0c8" r="2"></circle>
+<circle cx="1210" cy="380" fill="#00f0ff" filter="url(#neonGlowCyan)" r="4.5"></circle>
+<line stroke="#00f0ff" stroke-linecap="round" stroke-width="2" x1="920" x2="890" y1="560" y2="520"></line>
+<line stroke="#7af0c8" stroke-linecap="round" stroke-width="1.5" x1="970" x2="1010" y1="505" y2="470"></line>
+<line stroke="#dbfcff" stroke-linecap="round" stroke-width="2" x1="1160" x2="1190" y1="410" y2="370"></line>
+</svg>
+<!-- Sliced Cybernetic Hologram Melon (Upper Half) -->
+<div class="absolute left-[46%] top-[39%] -translate-x-1/2 -translate-y-1/2 animate-bounce transition-transform duration-700 -rotate-12">
+<div class="relative w-44 h-24 rounded-t-full bg-surface-container-high/90 backdrop-blur-md p-2 shadow-2xl flex flex-col justify-end items-center overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-b from-secondary-container/40 via-primary-container/20 to-transparent"></div>
+<!-- Inner fruit seeds/hologram pulse -->
+<div class="flex gap-2 mb-1 z-10">
+<span class="w-2 h-2 rounded-full bg-primary-container shadow-md"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-secondary shadow-md"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+<span class="w-2 h-2 rounded-full bg-secondary shadow-md"></span>
+</div>
+<span class="font-label-sm text-label-sm text-primary tracking-widest uppercase z-10">[CYBER_MELON_01]</span>
+</div>
+</div>
+<!-- Sliced Cybernetic Hologram Melon (Lower Half Sliding Down) -->
+<div class="absolute left-[54%] top-[56%] -translate-x-1/2 -translate-y-1/2 rotate-12">
+<div class="relative w-44 h-24 rounded-b-full bg-surface-container-high/90 backdrop-blur-md p-2 shadow-2xl flex flex-col justify-start items-center overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-secondary-container/40 via-primary-container/20 to-transparent"></div>
+<div class="flex gap-2 mt-2 z-10">
+<span class="w-2 h-2 rounded-full bg-secondary shadow-md"></span>
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+</div>
+<div class="mt-2 font-label-sm text-label-sm text-secondary-fixed tracking-widest uppercase z-10">CORE RUPTURED</div>
+</div>
+</div>
+<!-- Secondary Target: Sliced Hologram Neon Dragonfruit -->
+<div class="absolute left-[70%] top-[34%] -translate-x-1/2 -translate-y-1/2 rotate-45">
+<div class="relative w-28 h-28 rounded-2xl bg-surface-container-high/80 backdrop-blur-md p-3 shadow-xl flex flex-col items-center justify-center overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-br from-tertiary-container/30 to-primary-container/20"></div>
+<span class="material-symbols-outlined text-primary text-[36px] animate-pulse">crisis_alert</span>
+<span class="font-label-sm text-label-sm text-primary mt-1">HOLO_FRUIT</span>
+</div>
+</div>
+<!-- Dynamic Arcade Floating Score Pops -->
+<div class="absolute left-[52%] top-[34%] -translate-x-1/2 flex flex-col items-center">
+<div class="px-space-md py-space-xs bg-surface-container-lowest/90 backdrop-blur-xl rounded-lg shadow-2xl flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary-container text-[18px]">bolt</span>
+<span class="font-headline-md text-headline-md text-primary tracking-tighter uppercase font-bold drop-shadow-[0_0_12px_rgba(0,240,255,0.8)]">+250 CRIT!</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary tracking-widest mt-1 uppercase font-bold">[ACCURACY: 99.8%]</span>
+</div>
+<div class="absolute left-[64%] top-[45%] flex flex-col items-start">
+<div class="px-space-sm py-space-xs bg-surface-container-lowest/90 backdrop-blur-xl rounded-md shadow-xl flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-secondary-fixed font-bold tracking-tight drop-shadow-[0_0_8px_rgba(100,219,180,0.6)]">+100 COMBO BONUS</span>
+</div>
+</div>
+</div>
+<!-- HUD Layer: Reticles, Corner Brackets, Gyro Marks (Framing the Interactive Safe Zone) -->
+<div class="absolute inset-0 z-10 pointer-events-none p-gutter flex flex-col justify-between">
+<!-- Top Framing Guides -->
+<div class="w-full flex justify-between items-start">
+<div class="flex items-start gap-space-sm">
+<div class="w-8 h-8 bg-transparent relative">
+<div class="absolute top-0 left-0 w-8 h-1 bg-primary-container/70 shadow-[0_0_8px_rgba(0,240,255,0.8)]"></div>
+<div class="absolute top-0 left-0 w-1 h-8 bg-primary-container/70 shadow-[0_0_8px_rgba(0,240,255,0.8)]"></div>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline tracking-widest uppercase">X: +42.8109 // Y: -12.4490</span>
+<span class="font-label-sm text-label-sm text-secondary font-bold">GRID_FOV: 94.2 DEG</span>
+</div>
+</div>
+<!-- Center Pitch/Roll Gyro Ticks -->
+<div class="hidden lg:flex items-center gap-space-sm opacity-60">
+<span class="font-label-sm text-label-sm text-outline uppercase">-30°</span>
+<div class="w-12 h-[1px] bg-outline-variant"></div>
+<span class="font-label-sm text-label-sm text-primary-container font-bold tracking-widest uppercase">HORIZON LEVEL</span>
+<div class="w-12 h-[1px] bg-outline-variant"></div>
+<span class="font-label-sm text-label-sm text-outline uppercase">+30°</span>
+</div>
+<div class="flex items-start gap-space-sm flex-row-reverse text-right">
+<div class="w-8 h-8 bg-transparent relative">
+<div class="absolute top-0 right-0 w-8 h-1 bg-primary-container/70 shadow-[0_0_8px_rgba(0,240,255,0.8)]"></div>
+<div class="absolute top-0 right-0 w-1 h-8 bg-primary-container/70 shadow-[0_0_8px_rgba(0,240,255,0.8)]"></div>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline tracking-widest uppercase">OPTIC DEPTH: 1.84m</span>
+<span class="font-label-sm text-label-sm text-primary font-bold">[CALIBRATION OPTIMAL]</span>
+</div>
+</div>
+</div>
+<!-- Central Reticle Sight Markers -->
+<div class="self-center flex items-center justify-center relative w-72 h-72 pointer-events-none opacity-40">
+<div class="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-primary-container/5 to-transparent"></div>
+<div class="w-48 h-48 rounded-full bg-surface-container/20 backdrop-blur-[2px] flex items-center justify-center">
+<div class="w-2 h-2 rounded-full bg-primary-container animate-ping"></div>
+</div>
+<div class="absolute top-0 w-4 h-1 bg-primary-container"></div>
+<div class="absolute bottom-0 w-4 h-1 bg-primary-container"></div>
+<div class="absolute left-0 h-4 w-1 bg-primary-container"></div>
+<div class="absolute right-0 h-4 w-1 bg-primary-container"></div>
+</div>
+<!-- Bottom Framing Guides -->
+<div class="w-full flex justify-between items-end">
+<div class="flex items-end gap-space-sm">
+<div class="w-8 h-8 bg-transparent relative">
+<div class="absolute bottom-0 left-0 w-8 h-1 bg-primary-container/70 shadow-[0_0_8px_rgba(0,240,255,0.8)]"></div>
+<div class="absolute bottom-0 left-0 w-1 h-8 bg-primary-container/70 shadow-[0_0_8px_rgba(0,240,255,0.8)]"></div>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">LATENCY: 4.1ms PHOTON-TO-MOTION</span>
+<span class="font-label-sm text-label-sm text-primary font-bold">NEURAL SENSOR: ACTIVE</span>
+</div>
+</div>
+<div class="flex items-end gap-space-sm flex-row-reverse text-right">
+<div class="w-8 h-8 bg-transparent relative">
+<div class="absolute bottom-0 right-0 w-8 h-1 bg-primary-container/70 shadow-[0_0_8px_rgba(0,240,255,0.8)]"></div>
+<div class="absolute bottom-0 right-0 w-1 h-8 bg-primary-container/70 shadow-[0_0_8px_rgba(0,240,255,0.8)]"></div>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-widest">FPS BUFFER: STABLE</span>
+<span class="font-label-sm text-label-sm text-secondary font-bold">NODE: US-WEST-BLADE-07</span>
+</div>
+</div>
+</div>
+</div>
+<!-- HUD CONTENT OVERLAY (Z-INDEX 30) -->
+<div class="absolute inset-0 z-30 pointer-events-none p-gutter flex flex-col justify-between">
+<!-- TOP HUD GLASSMORPHISM DECK -->
+<div class="w-full max-w-5xl mx-auto pointer-events-auto">
+<div class="bg-surface-container-lowest/85 backdrop-blur-2xl rounded-xl p-space-md shadow-2xl flex flex-col md:flex-row items-center justify-between gap-space-md">
+<!-- Left: Digital Flickering Score Ticker -->
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center shadow-inner">
+<span class="material-symbols-outlined text-primary-container text-[24px]">swords</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-widest">SCORE</span>
+<span class="font-telemetry-num text-headline-lg text-primary tracking-tight font-bold drop-shadow-[0_0_10px_rgba(0,240,255,0.5)]">048,920</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-outline-variant uppercase">HI-SCORE</span>
+<span class="font-label-sm text-label-sm text-secondary font-medium tracking-wide">112,400 PTS</span>
+</div>
+</div>
+</div>
+<!-- Center: Dynamic Pulsing Combo Engine Banner -->
+<div class="flex flex-col items-center">
+<div class="flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-surface-container-high shadow-lg">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary animate-ping"></span>
+<span class="font-headline-sm text-headline-sm text-secondary-fixed uppercase tracking-wider font-bold drop-shadow-[0_0_8px_rgba(100,219,180,0.8)]">COMBO x3!</span>
+</div>
+<!-- Multiplier Segmented Track -->
+<div class="w-48 sm:w-60 flex items-center gap-[3px] mt-2 h-2 p-[2px] bg-surface-container-low rounded-full">
+<div class="h-full flex-1 bg-secondary rounded-full shadow-[0_0_6px_rgba(100,219,180,0.8)]"></div>
+<div class="h-full flex-1 bg-secondary rounded-full shadow-[0_0_6px_rgba(100,219,180,0.8)]"></div>
+<div class="h-full flex-1 bg-primary-container rounded-full shadow-[0_0_6px_rgba(0,240,255,0.8)]"></div>
+<div class="h-full flex-1 bg-primary-container rounded-full shadow-[0_0_6px_rgba(0,240,255,0.8)]"></div>
+<div class="h-full flex-1 bg-surface-variant rounded-full opacity-40"></div>
+</div>
+<span class="font-label-sm text-label-sm text-outline mt-1 uppercase tracking-widest">NEXT OVERDRIVE: +4 SLICES</span>
+</div>
+<!-- Right: 3 Neon Cyber-Blade Lives Indicators -->
+<div class="flex flex-col items-end">
+<div class="flex items-center gap-space-xs mb-1">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">CYBER LIVES</span>
+<span class="font-label-sm text-label-sm text-primary-container font-bold">[2/3]</span>
+</div>
+<div class="flex items-center gap-space-sm bg-surface-container px-space-sm py-space-xs rounded-lg shadow-inner">
+<!-- Active Life 1 -->
+<div class="flex items-center justify-center p-1 bg-surface-container-high rounded shadow-[0_0_12px_rgba(0,240,255,0.4)]" title="Blade Core 1: Active">
+<span class="material-symbols-outlined text-primary-container text-[24px]">colorize</span>
+</div>
+<!-- Active Life 2 -->
+<div class="flex items-center justify-center p-1 bg-surface-container-high rounded shadow-[0_0_12px_rgba(0,240,255,0.4)]" title="Blade Core 2: Active">
+<span class="material-symbols-outlined text-primary-container text-[24px]">colorize</span>
+</div>
+<!-- Lost / Fractured Life 3 -->
+<div class="flex items-center justify-center p-1 bg-surface-container-low rounded opacity-30 relative" title="Blade Core 3: Depleted">
+<span class="material-symbols-outlined text-error text-[24px]">colorize</span>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="w-full h-[2px] bg-error rotate-45"></span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- MIDDLE FLANK WINGS (Collapsible Biometric & Spatial Telemetry) -->
+<div class="w-full flex justify-between items-center my-auto pointer-events-none">
+<!-- Left Rail Telemetry Panel -->
+<div class="hidden lg:flex flex-col gap-space-sm pointer-events-auto max-w-xs">
+<div class="bg-surface-container-lowest/80 backdrop-blur-xl p-space-md rounded-xl shadow-xl flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">TELEMETRY DECK</span>
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+</div>
+<div class="mt-space-xs">
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase">BLADE VELOCITY</div>
+<div class="font-telemetry-num text-headline-md text-primary font-bold">24.8 <span class="text-label-md font-label-md text-outline">m/s</span></div>
+</div>
+<div class="h-[1px] bg-outline-variant/30 my-space-xs"></div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">AI OPTIC-LOCK</span>
+<span class="font-label-sm text-label-sm text-secondary font-bold">99.4%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary rounded-full w-[99%] shadow-[0_0_6px_rgba(100,219,180,0.6)]"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1 mt-1">
+<div class="flex justify-between items-center">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">MULTIPLIER GAUGE</span>
+<span class="font-label-sm text-label-sm text-primary-container font-bold">85%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary-container rounded-full w-[85%] shadow-[0_0_6px_rgba(0,240,255,0.6)]"></div>
+</div>
+</div>
+<div class="mt-space-sm p-space-xs bg-surface-container rounded flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-[16px]">sensors</span>
+<span class="font-label-sm text-label-sm text-on-surface tracking-tight">TRAJECTORY PREDICTION: ON</span>
+</div>
+</div>
+</div>
+<!-- Right Rail: Webcam Tracking PIP Feed Mini-Monitor -->
+<div class="hidden lg:flex flex-col gap-space-sm pointer-events-auto items-end">
+<div class="bg-surface-container-lowest/80 backdrop-blur-xl p-space-sm rounded-xl shadow-xl flex flex-col items-end w-48">
+<div class="w-full flex items-center justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wider">OPTIC CAM 01</span>
+<span class="font-label-sm text-label-sm text-secondary uppercase bg-surface-container px-1 py-0.5 rounded">LIVE</span>
+</div>
+<!-- Mini Camera Canvas Frame with Stylized Tracking Mesh -->
+<div class="relative w-full h-28 bg-surface-container-low rounded-lg overflow-hidden flex items-center justify-center">
+<div class="w-full h-full bg-cover bg-center opacity-40" data-alt="High contrast neon silhouette tracking frame of a person slicing in space, computer vision keypoints and skeletal wireframe overlaid in electric cyan" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAp5dV6BHwQXeKs1PZxbR4kV1wwTOdHQjmSm_TMBU8fR1Nvxj-3PiDaCqYBs17iUEQ-9w8vUH-5mNrqiUOfWjGpZJFFL3fw7sxUVMdQ46mllbqXVm54h58UrkQicJ7qTiKdRC2OFm6Qgx3Tn7MCvfx28Q7EyResZa2SsPGzKgNwabOceVR5Tt8hUnQwmmSfnQrMGhJ1lPZbJe0jtEAFK9VKZsTt7GzJqehYoJdQCmCPC_iVigLqfIZp')"></div>
+<!-- Computer Vision Spatial Bounding Box -->
+<div class="absolute inset-3 border border-primary-container/80 rounded flex items-start justify-start p-1 shadow-[0_0_8px_rgba(0,240,255,0.4)]">
+<span class="font-label-sm text-label-sm text-primary-container bg-surface-container-lowest/80 px-1 rounded">HAND_R: 98%</span>
+</div>
+<div class="absolute w-2 h-2 bg-secondary rounded-full bottom-4 right-4 animate-ping"></div>
+</div>
+<span class="font-label-sm text-label-sm text-outline mt-1 uppercase text-right tracking-tighter">SKELETON_TRACK: V2.8</span>
+</div>
+</div>
+</div>
+<!-- BOTTOM CONTROLS & HUD DECK -->
+<div class="w-full flex flex-col sm:flex-row items-center justify-between gap-space-md pointer-events-auto">
+<!-- Bottom Left: Match Clock & Wave Tier -->
+<div class="flex items-center gap-space-md bg-surface-container-lowest/85 backdrop-blur-xl px-space-md py-space-sm rounded-xl shadow-xl">
+<div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-container text-[20px]">timer</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">TIME</span>
+<span class="font-telemetry-num text-headline-sm text-primary font-bold" id="sessionTimer">01:24.8</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-secondary-fixed uppercase font-bold tracking-wider">WAVE 04 // OVERDRIVE</span>
+</div>
+</div>
+</div>
+<!-- Action Prompt Banner (Mobile & Center Visual Anchor) -->
+<div class="hidden sm:flex items-center gap-space-sm px-space-lg py-space-xs bg-surface-container-lowest/60 backdrop-blur-md rounded-full">
+<span class="material-symbols-outlined text-primary text-[18px] animate-bounce">pan_tool</span>
+<span class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant font-medium">SWING SMARTPHONE TO SLICE CYBER CORES</span>
+</div>
+<!-- Bottom Right: Tactile Quick Action Floating Pill -->
+<div class="flex items-center gap-space-xs bg-surface-container-lowest/85 backdrop-blur-xl p-space-xs rounded-xl shadow-xl">
+<!-- Audio Visualizer / Mute Toggle -->
+<button aria-label="Toggle Audio Track" class="flex items-center gap-space-xs px-space-sm py-space-xs rounded-lg bg-surface-container hover:bg-surface-container-high text-primary-container transition-all" id="audioToggleBtn" type="button">
+<span class="material-symbols-outlined text-[20px]">graphic_eq</span>
+<span class="hidden md:inline font-label-sm text-label-sm uppercase font-bold">SYNTH BEAT</span>
+</button>
+<!-- Tactical Pause Button (Double Vertical Cyan Bars) -->
+<button aria-label="Pause Match" class="p-space-xs rounded-lg bg-primary-container text-on-primary-container hover:bg-primary-fixed-dim transition-all shadow-[0_0_12px_rgba(0,240,255,0.4)] flex items-center justify-center" id="pauseBtn" type="button">
+<span class="material-symbols-outlined text-[22px] font-bold">pause</span>
+</button>
+<!-- Blade Sensitivity / Calibrate Trigger -->
+<button aria-label="Calibrate Gyro" class="p-space-xs rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-all" type="button">
+<span class="material-symbols-outlined text-[20px]">tune</span>
+</button>
+<!-- Fullscreen Mode -->
+<button aria-label="Toggle Arena Fullscreen" class="p-space-xs rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-all" type="button">
+<span class="material-symbols-outlined text-[20px]">fullscreen</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+  (function initBladeEngineHUD() {
+    const canvas = document.getElementById('bladeCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    const trailPoints = [];
+    const maxPoints = 22;
+    const sparks = [];
+
+    // Interactive mouse/touch tracking for realistic blade slashes
+    function addPoint(x, y) {
+      trailPoints.push({ x, y, life: 1.0 });
+      if (trailPoints.length > maxPoints) {
+        trailPoints.shift();
+      }
+      // Emit sparks on movement
+      for (let i = 0; i < 2; i++) {
+        sparks.push({
+          x,
+          y,
+          vx: (Math.random() - 0.5) * 8,
+          vy: (Math.random() - 0.5) * 8,
+          alpha: 1.0,
+          color: Math.random() > 0.5 ? '#00f0ff' : '#7af0c8',
+          radius: Math.random() * 2.5 + 1
+        });
+      }
+    }
+
+    window.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      addPoint(e.clientX - rect.left, e.clientY - rect.top);
+    });
+
+    window.addEventListener('touchmove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      if (e.touches.length > 0) {
+        addPoint(e.touches[0].clientX - rect.left, e.touches[0].clientY - rect.top);
+      }
+    }, { passive: true });
+
+    function renderBladeFX() {
+      ctx.clearRect(0, 0, width, height);
+
+      // Render decaying slash curve
+      if (trailPoints.length > 2) {
+        ctx.save();
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        // Outer Neon Glow Trail
+        ctx.shadowBlur = 18;
+        ctx.shadowColor = '#00f0ff';
+        ctx.strokeStyle = '#00f0ff';
+
+        for (let i = 0; i < trailPoints.length - 1; i++) {
+          const pt = trailPoints[i];
+          const nextPt = trailPoints[i + 1];
+          const progress = i / trailPoints.length;
+
+          ctx.beginPath();
+          ctx.moveTo(pt.x, pt.y);
+          ctx.lineTo(nextPt.x, nextPt.y);
+          ctx.lineWidth = progress * 10;
+          ctx.globalAlpha = pt.life * progress * 0.8;
+          ctx.stroke();
+        }
+
+        // Razor Sharp Inner White/Mint Core
+        ctx.shadowBlur = 6;
+        ctx.shadowColor = '#7af0c8';
+        ctx.strokeStyle = '#dbfcff';
+
+        for (let i = 0; i < trailPoints.length - 1; i++) {
+          const pt = trailPoints[i];
+          const nextPt = trailPoints[i + 1];
+          const progress = i / trailPoints.length;
+
+          ctx.beginPath();
+          ctx.moveTo(pt.x, pt.y);
+          ctx.lineTo(nextPt.x, nextPt.y);
+          ctx.lineWidth = progress * 3;
+          ctx.globalAlpha = pt.life * progress;
+          ctx.stroke();
+        }
+
+        ctx.restore();
+      }
+
+      // Age trail
+      for (let i = 0; i < trailPoints.length; i++) {
+        trailPoints[i].life -= 0.04;
+      }
+      while (trailPoints.length > 0 && trailPoints[0].life <= 0) {
+        trailPoints.shift();
+      }
+
+      // Render sparks
+      for (let i = sparks.length - 1; i >= 0; i--) {
+        const s = sparks[i];
+        s.x += s.vx;
+        s.y += s.vy;
+        s.alpha -= 0.035;
+
+        if (s.alpha <= 0) {
+          sparks.splice(i, 1);
+          continue;
+        }
+
+        ctx.save();
+        ctx.globalAlpha = s.alpha;
+        ctx.fillStyle = s.color;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = s.color;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      requestAnimationFrame(renderBladeFX);
+    }
+
+    renderBladeFX();
+
+    // Subtle Live HUD Timer Incrementer
+    let totalSeconds = 84.8;
+    const timerElem = document.getElementById('sessionTimer');
+    if (timerElem) {
+      setInterval(() => {
+        totalSeconds += 0.1;
+        const mins = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+        const secs = (totalSeconds % 60).toFixed(1).padStart(4, '0');
+        timerElem.textContent = `${mins}:${secs}`;
+      }, 100);
+    }
+  })();
+</script></main><footer class="w-full bg-surface-container-lowest border-t border-outline-variant/30 py-space-md"><div class="w-full px-gutter flex flex-col sm:flex-row items-center justify-between gap-space-sm text-outline"><div class="flex items-center gap-space-sm"><span class="font-label-sm text-label-sm uppercase text-outline">OPTICAL ENGINE v4.2 // PHONEBLADE NEURAL LABS</span></div><div class="font-label-sm text-label-sm uppercase tracking-widest text-outline-variant">© 2025 PHONEBLADE ARCADE. ALL RIGHTS RESERVED.</div></div></footer></body></html>

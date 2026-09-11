@@ -4,84 +4,65 @@ import { GameView } from "./components/GameView";
 import { FistDebugScreen } from "./components/FistDebugScreen";
 import { SwordPreviewScreen } from "./components/SwordPreviewScreen";
 
-type Mode = "debug" | "play" | "fist" | "sword";
+type Mode = "play" | "debug" | "fist" | "sword";
 
 export function App() {
-  const [mode, setMode] = useState<Mode>("debug");
+  const [mode, setMode] = useState<Mode>("play");
+
+  if (mode === "play") {
+    return <GameView />;
+  }
+
   return (
-    <div style={rootStyle}>
-      <nav style={navStyle}>
-        <span style={brand}>PhoneBlade</span>
+    <div className="flex flex-col h-screen w-screen bg-surface-container-lowest text-on-surface">
+      <nav className="flex items-center gap-3 px-4 py-2 bg-surface-container border-b border-outline-variant text-xs z-50">
+        <span className="font-bold text-primary mr-2 tracking-wider uppercase">PhoneBlade</span>
         <button
-          style={tab(mode === "debug")}
+          className={`px-3 py-1 rounded font-label-sm uppercase tracking-wider cursor-pointer ${
+            mode === "play"
+              ? "bg-primary-container text-on-primary-container font-bold shadow-sm shadow-primary-container/30"
+              : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high"
+          }`}
+          onClick={() => setMode("play")}
+        >
+          Play Arena
+        </button>
+        <button
+          className={`px-3 py-1 rounded font-label-sm uppercase tracking-wider cursor-pointer ${
+            mode === "debug"
+              ? "bg-primary-container text-on-primary-container font-bold shadow-sm shadow-primary-container/30"
+              : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high"
+          }`}
           onClick={() => setMode("debug")}
         >
           Debug (swing)
         </button>
         <button
-          style={tab(mode === "play")}
-          onClick={() => setMode("play")}
-        >
-          Play (fruit)
-        </button>
-        <button
-          style={tab(mode === "fist")}
+          className={`px-3 py-1 rounded font-label-sm uppercase tracking-wider cursor-pointer ${
+            mode === "fist"
+              ? "bg-primary-container text-on-primary-container font-bold shadow-sm shadow-primary-container/30"
+              : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high"
+          }`}
           onClick={() => setMode("fist")}
         >
           Fist (track)
         </button>
         <button
-          style={tab(mode === "sword")}
+          className={`px-3 py-1 rounded font-label-sm uppercase tracking-wider cursor-pointer ${
+            mode === "sword"
+              ? "bg-primary-container text-on-primary-container font-bold shadow-sm shadow-primary-container/30"
+              : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high"
+          }`}
           onClick={() => setMode("sword")}
         >
           Sword (preview)
         </button>
       </nav>
-      <div style={bodyStyle}>
+      <div className="flex-1 min-h-0">
         {mode === "debug" && <DebugScreen />}
-        {mode === "play" && <GameView />}
         {mode === "fist" && <FistDebugScreen />}
         {mode === "sword" && <SwordPreviewScreen />}
       </div>
     </div>
   );
 }
-
-const rootStyle: React.CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  height: "100vh",
-  width: "100vw",
-};
-
-const navStyle: React.CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  gap: 8,
-  padding: "6px 12px",
-  background: "#10141a",
-  borderBottom: "1px solid #1f2630",
-  fontSize: 13,
-};
-
-const brand: React.CSSProperties = {
-  fontWeight: 700,
-  letterSpacing: 0.5,
-  marginRight: 12,
-};
-
-const bodyStyle: React.CSSProperties = {
-  flex: 1,
-  minHeight: 0,
-};
-
-const tab = (active: boolean): React.CSSProperties => ({
-  background: active ? "#7af0c8" : "transparent",
-  color: active ? "#0b0d10" : "#cfd6df",
-  border: "1px solid " + (active ? "#7af0c8" : "#2c3542"),
-  borderRadius: 6,
-  padding: "4px 12px",
-  cursor: "pointer",
-  fontSize: 13,
-  fontWeight: 600,
-});
